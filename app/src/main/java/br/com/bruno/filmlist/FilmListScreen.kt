@@ -24,36 +24,79 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.navigation.NavController
 
+val list = listOf<Film>(
+       Film(
+           0,
+           "Clube da Luta",
+           "Ação",
+           "1hr 30min",
+           "Está é a sinopse",
+           true
+       ),
+        Film(
+            1,
+            "Memento",
+            "Drama",
+            "1hr 56min",
+            "Ele tem amninesia",
+            true
+        ),
+        Film(
+            2,
+            "Star Wars",
+            "Fantasia",
+            "2hr 12min",
+            "Batalhas no espaço",
+            false
+        ),
+)
 
 //Union of the other composable
 @Composable
-fun FilmScreen(){
+fun FilmScreen(
+    navController: NavController
+){
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = {}){
+            FloatingActionButton(onClick = {
+                navController.navigate("filmdetail")
+            }){
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add Film")
             }
         }
     ) {
         Column() {
+            FilmList(
+                films = list,
+                navController
+            )
         }
     }
 }
 
 //Display all the Film itens in list
 @Composable
-fun FilmList(films: List<Film>){
+fun FilmList(
+    films: List<Film>,
+    navController: NavController
+){
     LazyColumn(){
         items(films){ film ->
-            FilmItem(film)
+            FilmItem(film){
+                navController.navigate("filmdetail?id=${film.id}")
+            }
         }
     }
 }
 
 //Composable of Film Item
 @Composable
-fun FilmItem(film: Film){
+fun FilmItem(
+    film: Film,
+    toEdit: () -> Unit
+){
     var visto: String
     if(film.watched)
         visto="Sim"
@@ -122,7 +165,10 @@ fun FilmItem(film: Film){
                     Icon(
                         modifier = Modifier
                             .padding(8.dp)
-                            .size(32.dp),
+                            .size(32.dp)
+                            .clickable {
+                                toEdit()
+                            },
                         imageVector = Icons.Default.Edit,
                         contentDescription = "Edit"
                     )
@@ -135,40 +181,34 @@ fun FilmItem(film: Film){
                     Text(
                         modifier = Modifier.padding(bottom = 1.dp),
                         text = "ID: ${film.id}",
-                        style = MaterialTheme.typography.subtitle1.copy(color = Color.Black, fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.subtitle1.copy(color = Color.White, fontWeight = FontWeight.Bold)
                     )
                     Text(
                         modifier = Modifier.padding(bottom = 1.dp),
                         text = "Genero: ${film.genre}",
-                        style = MaterialTheme.typography.subtitle1.copy(color = Color.Black, fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.subtitle1.copy(color = Color.White, fontWeight = FontWeight.Bold)
                     )
 
                     Text(
                         modifier = Modifier.padding(bottom = 1.dp),
                         text = "Duração: ${film.duration}",
-                        style = MaterialTheme.typography.subtitle1.copy(color = Color.Black, fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.subtitle1.copy(color = Color.White, fontWeight = FontWeight.Bold)
                     )
                     Text(
                         modifier = Modifier.padding(bottom = 6.dp),
                         text = "Visto: ${visto}",
-                        style = MaterialTheme.typography.subtitle1.copy(color = Color.Black, fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.subtitle1.copy(color = Color.White, fontWeight = FontWeight.Bold)
                     )
                     Text(
                         text = "Sinopse:",
-                        style = MaterialTheme.typography.subtitle1.copy(color = Color.Black, fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.subtitle1.copy(color = Color.White, fontWeight = FontWeight.Bold)
                     )
                     Text(
                         text = "${film.synopsis}",
-                        style = MaterialTheme.typography.subtitle2.copy(color = Color.DarkGray)
+                        style = MaterialTheme.typography.subtitle2.copy(color = Color.LightGray)
                     )
                 }
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun FilmItemPreview(){
-    FilmItem(film = Film(1,"Clube da Luta", "Ação", "1hr e 30min", "Um homem deprimido que sofre de insônia conhece um estranho vendedor chamado Tyler Durden e se vê morando em uma casa suja depois que seu perfeito apartamento é destruído. A dupla forma um clube com regras rígidas onde homens lutam. A parceria perfeita é comprometida quando uma mulher, Marla, atrai a atenção de Tyler.", true))
 }

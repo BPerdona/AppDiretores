@@ -13,18 +13,33 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 @Composable
-fun FilmDetailScreen(){
+fun FilmDetailScreen(
+    navController: NavController
+){
      Scaffold(
          floatingActionButton = {
-             FloatingActionButton(onClick = { /*TODO*/ })
+             FloatingActionButton(onClick = {
+                 navController.navigate("filmlist"){
+                     popUpTo("filmlist"){
+                         inclusive = true
+                     }
+                 }
+             })
              {
                  Icon(imageVector = Icons.Default.Done, contentDescription = "Confirm Button")
              }
          }
      ) {
-         FilmDetailForm(id = 1)
+         FilmDetailForm(id = 1){
+             navController.navigate("filmlist"){
+                 popUpTo("filmlist"){
+                     inclusive = true
+                 }
+             }
+         }
      }
 }
 
@@ -32,7 +47,8 @@ fun FilmDetailScreen(){
 //Composable with film form
 @Composable
 fun FilmDetailForm(
-    id: Int
+    id: Int,
+    navigateBack: () -> Unit
 ) {
     val checkedState = remember { mutableStateOf(true) }
     Column(
@@ -105,23 +121,18 @@ fun FilmDetailForm(
                     modifier = Modifier
                         .padding(start = 2.dp, end = 2.dp),
                     checked = checkedState.value,
-                    onCheckedChange = { },
+                    onCheckedChange = { checkedState.value = !checkedState.value },
                 )
             }
         }
         if (id != -1)
             FloatingActionButton(
                 modifier = Modifier.padding(16.dp),
-                onClick = { /*TODO*/ }
+                onClick = {
+                    navigateBack()
+                }
             ) {
                 Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete Film")
             }
     }
-}
-
-
-@Preview
-@Composable
-fun FilmDetailFormPreview(){
-    FilmDetailScreen()
 }
