@@ -24,39 +24,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.navigation.NavController
 
-val list = listOf<Film>(
-       Film(
-           0,
-           "Clube da Luta",
-           "Ação",
-           "1hr 30min",
-           "Está é a sinopse",
-           true
-       ),
-        Film(
-            1,
-            "Memento",
-            "Drama",
-            "1hr 56min",
-            "Ele tem amninesia",
-            true
-        ),
-        Film(
-            2,
-            "Star Wars",
-            "Fantasia",
-            "2hr 12min",
-            "Batalhas no espaço",
-            false
-        ),
-)
 
 //Union of the other composable
 @Composable
 fun FilmScreen(
-    navController: NavController
+    navController: NavController,
+    filmListViewModel: FilmListViewModel,
 ){
     Scaffold(
         floatingActionButton = {
@@ -67,9 +43,12 @@ fun FilmScreen(
             }
         }
     ) {
+        //Creating the values
+        val filmList by filmListViewModel.listFilm.observeAsState(initial = listOf())
+
         Column() {
             FilmList(
-                films = list,
+                filmList,
                 navController
             )
         }
@@ -157,7 +136,7 @@ fun FilmItem(
                                 .padding(8.dp)
                                 .size(32.dp),
                             imageVector = Icons.Default.Close,
-                            contentDescription = "Watched"
+                            contentDescription = "Not Watched"
                         )
                     }
                 }
