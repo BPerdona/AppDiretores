@@ -4,6 +4,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.Spring
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,10 +22,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.bruno.entities.Film
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.navigation.NavController
 
 
@@ -84,7 +88,7 @@ fun FilmItem(
     var expanded by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
-            .padding(2.dp)
+            .padding(3.dp)
             .clickable {
                 expanded = !expanded
             }
@@ -97,15 +101,23 @@ fun FilmItem(
     ){
         Column() {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color=Color.DarkGray),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier = Modifier
                         .padding(6.dp)
+                        .border(
+                            width = 2.dp,
+                            color = Color.Black,
+                            shape = CircleShape
+                        )
+                        .size(75.dp)
                         .clip(CircleShape)
-                        .size(70.dp)
-                        .background(Color.LightGray),
+                        .background(Color.LightGray)
+                        ,
                     contentAlignment = Alignment.Center
                 ){
                     Text(
@@ -119,7 +131,7 @@ fun FilmItem(
                         .weight(1f),
                     text = film.title,
                     style = MaterialTheme.typography.h6
-                        .copy(fontWeight = FontWeight.Bold)
+                        .copy(color = Color.White ,fontWeight = FontWeight.Bold)
                 )
                 if(!expanded){
                     if(film.watched){
@@ -128,7 +140,8 @@ fun FilmItem(
                                 .padding(8.dp)
                                 .size(32.dp),
                             imageVector = Icons.Default.Check,
-                            contentDescription = "Watched"
+                            contentDescription = "Watched",
+                            tint = Color.Green
                         )
                     }else{
                         Icon(
@@ -136,7 +149,8 @@ fun FilmItem(
                                 .padding(8.dp)
                                 .size(32.dp),
                             imageVector = Icons.Default.Close,
-                            contentDescription = "Not Watched"
+                            contentDescription = "Not Watched",
+                            tint = Color.Red
                         )
                     }
                 }
@@ -149,35 +163,59 @@ fun FilmItem(
                                 toEdit()
                             },
                         imageVector = Icons.Default.Edit,
-                        contentDescription = "Edit"
+                        contentDescription = "Edit",
+                        tint = Color.Yellow
                     )
                 }
             }
             if(expanded){
                 Column(
-                    modifier = Modifier.padding(6.dp)
+                    modifier = Modifier
+                        .border(
+                            width = 5.dp,
+                            color = Color.DarkGray,
+                            shape = RoundedCornerShape(2.dp)
+                        )
+                        .padding(12.dp)
                 ) {
-                    Text(
-                        modifier = Modifier.padding(bottom = 1.dp),
-                        text = "ID: ${film.id}",
-                        style = MaterialTheme.typography.subtitle1.copy(color = Color.White, fontWeight = FontWeight.Bold)
-                    )
-                    Text(
-                        modifier = Modifier.padding(bottom = 1.dp),
-                        text = "Genero: ${film.genre}",
-                        style = MaterialTheme.typography.subtitle1.copy(color = Color.White, fontWeight = FontWeight.Bold)
-                    )
-
-                    Text(
-                        modifier = Modifier.padding(bottom = 1.dp),
-                        text = "Duração: ${film.duration}",
-                        style = MaterialTheme.typography.subtitle1.copy(color = Color.White, fontWeight = FontWeight.Bold)
-                    )
-                    Text(
-                        modifier = Modifier.padding(bottom = 6.dp),
-                        text = "Visto: ${visto}",
-                        style = MaterialTheme.typography.subtitle1.copy(color = Color.White, fontWeight = FontWeight.Bold)
-                    )
+                    Row(
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(bottom = 1.dp)
+                                .weight(1f),
+                            text = "ID: ${film.id}",
+                            style = MaterialTheme.typography.subtitle1.copy(color = Color.White, fontWeight = FontWeight.Bold)
+                        )
+                        Text(
+                            modifier = Modifier
+                                .padding(bottom = 5.dp)
+                                .weight(0.9f),
+                            text = "Genero: ${film.genre}",
+                            style = MaterialTheme.typography.subtitle1.copy(color = Color.White, fontWeight = FontWeight.Bold)
+                        )
+                    }
+                    Row(
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(bottom = 6.dp)
+                                .weight(1f),
+                            text = "Duração: ${film.duration}",
+                            style = MaterialTheme.typography.subtitle1.copy(color = Color.White, fontWeight = FontWeight.Bold)
+                        )
+                        Text(
+                            modifier = Modifier
+                                .padding(bottom = 6.dp)
+                                .weight(0.9f),
+                            text = "Visto: ${visto}",
+                            style = MaterialTheme.typography.subtitle1.copy(color = Color.White, fontWeight = FontWeight.Bold)
+                        )
+                    }
                     Text(
                         text = "Sinopse:",
                         style = MaterialTheme.typography.subtitle1.copy(color = Color.White, fontWeight = FontWeight.Bold)
