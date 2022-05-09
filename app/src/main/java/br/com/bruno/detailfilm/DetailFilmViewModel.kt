@@ -6,7 +6,7 @@ import br.com.bruno.entities.Film
 
 class DetailFilmViewModel : ViewModel(){
 
-    private val _id : MutableLiveData<Int> = MutableLiveData(6)
+    private val _id : MutableLiveData<Int> = MutableLiveData(9)
     val title: MutableLiveData<String> = MutableLiveData("")
     val genre: MutableLiveData<String> = MutableLiveData("")
     val duration: MutableLiveData<String> = MutableLiveData("")

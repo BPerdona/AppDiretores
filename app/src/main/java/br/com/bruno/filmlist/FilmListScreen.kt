@@ -37,23 +37,26 @@ import androidx.navigation.NavController
 fun FilmScreen(
     navController: NavController,
     filmListViewModel: FilmListViewModel,
+    films: List<Film>,
+    idDir: Int
 ){
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                navController.navigate("filmdetail")
+                navController.navigate("director/${idDir}/detail")
             }){
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add Film")
             }
         }
     ) {
         //Creating the values
-        val filmList by filmListViewModel.listFilm.observeAsState(initial = listOf())
+        filmListViewModel.listFilm.value = films
 
         Column() {
             FilmList(
-                filmList,
-                navController
+                films,
+                navController,
+                idDir
             )
         }
     }
@@ -63,12 +66,13 @@ fun FilmScreen(
 @Composable
 fun FilmList(
     films: List<Film>,
-    navController: NavController
+    navController: NavController,
+    idDir: Int
 ){
     LazyColumn(){
         items(films){ film ->
             FilmItem(film){
-                navController.navigate("filmdetail?id=${film.id}")
+                navController.navigate("director/${idDir}/detail?filmDetail=${film.id}")
             }
         }
     }

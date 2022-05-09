@@ -2,20 +2,19 @@ package br.com.bruno.detailfilm
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.TextFieldDefaults.outlinedTextFieldColors
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import br.com.bruno.entities.Film
+import br.com.bruno.filmlist.FilmListViewModel
 
 @Composable
 fun FilmDetailScreen(
@@ -24,22 +23,31 @@ fun FilmDetailScreen(
     onInsertFilm: (Film) -> Unit,
     onUpdateFilm: (Film) -> Unit,
     onRemoveFilm: (Int) -> Unit,
-    film: Film
+    refreshFilms: (Int, List<Film>) -> Unit,
+    filmViewModel: FilmListViewModel,
+    film: Film,
+    idDir: Int
 
     ){
      Scaffold(
          floatingActionButton = {
              FloatingActionButton(onClick = {
-                 if(film.id == -1)
+                 if(film.id == -1) {
                      detailFilmViewModel.insertFilm(onInsertFilm)
-                 else
+                     refreshFilms(idDir, filmViewModel.getListFilm())
+                 }
+                 else{
                      detailFilmViewModel.updateFilm(
                          film.id,
                          onUpdateFilm
                      )
-
-                 navController.navigate("filmlist"){
-                     popUpTo("filmlist"){
+                     refreshFilms(idDir, filmViewModel.getListFilm())
+                 }
+                 //Inclusive nao esta funcionando entao limpei os ultimos itens da stack
+                 navController.popBackStack()
+                 navController.popBackStack()
+                 navController.navigate("director/${idDir}"){
+                     popUpTo("director/${idDir}"){
                          inclusive = true
                      }
                  }
@@ -60,8 +68,11 @@ fun FilmDetailScreen(
              film.id,
              onRemoveFilm,
          ) {
-             navController.navigate("filmlist"){
-                 popUpTo("filmlist"){
+             refreshFilms(idDir, filmViewModel.getListFilm())
+             navController.popBackStack()
+             navController.popBackStack()
+             navController.navigate("director/${idDir}"){
+                 popUpTo("director/${idDir}"){
                      inclusive = true
                  }
              }
@@ -78,6 +89,7 @@ fun FilmDetailForm(
     id: Int,
     onRemoveFilm: (Int) -> Unit,
     navigateBack: () -> Unit,
+
 ) {
     //Creating values by detailFilmViewModel
     val title = detailFilmViewModel.title.observeAsState()
@@ -105,6 +117,10 @@ fun FilmDetailForm(
                 label = {
                     Text(text = "Title")
                 },
+                colors = outlinedTextFieldColors(
+                    focusedLabelColor = Color.Yellow,
+                    focusedBorderColor = Color.Yellow
+                ),
                 value = "${title.value}",
                 onValueChange = { newTitle->
                     detailFilmViewModel.title.value = newTitle
@@ -117,6 +133,10 @@ fun FilmDetailForm(
                 label = {
                     Text(text = "Genre")
                 },
+                colors = outlinedTextFieldColors(
+                    focusedLabelColor = Color.Yellow,
+                    focusedBorderColor = Color.Yellow
+                ),
                 value = "${genre.value}",
                 onValueChange = { newGenre ->
                     detailFilmViewModel.genre.value = newGenre
@@ -129,6 +149,10 @@ fun FilmDetailForm(
                 label = {
                     Text(text = "Duration")
                 },
+                colors = outlinedTextFieldColors(
+                    focusedLabelColor = Color.Yellow,
+                    focusedBorderColor = Color.Yellow
+                ),
                 value = "${duration.value}",
                 onValueChange = { newDuration ->
                     detailFilmViewModel.duration.value = newDuration
@@ -141,6 +165,10 @@ fun FilmDetailForm(
                 label = {
                     Text(text = "Synopsis")
                 },
+                colors = outlinedTextFieldColors(
+                    focusedLabelColor = Color.Yellow,
+                    focusedBorderColor = Color.Yellow
+                ),
                 value = "${synopsis.value}",
                 onValueChange = { newSyn ->
                     detailFilmViewModel.synopsis.value = newSyn
