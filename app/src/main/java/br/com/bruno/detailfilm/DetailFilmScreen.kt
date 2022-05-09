@@ -60,7 +60,7 @@ fun FilmDetailScreen(
          detailFilmViewModel.title.value = film.title
          detailFilmViewModel.genre.value = film.genre
          detailFilmViewModel.duration.value = film.duration
-         detailFilmViewModel.synopsis.value = film.title
+         detailFilmViewModel.synopsis.value = film.synopsis
          detailFilmViewModel.watched.value = film.watched
 
          FilmDetailForm(
